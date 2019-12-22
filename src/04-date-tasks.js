@@ -6,7 +6,6 @@
  *                                                                                           *
  ******************************************************************************************* */
 
-
 /**
  * Parses a rfc2822 string date representation into date value
  * For rfc2822 date specification refer to : http://tools.ietf.org/html/rfc2822#page-14
@@ -19,8 +18,8 @@
  *    'Tue, 26 Jan 2016 13:48:02 GMT' => Date()
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
-function parseDataFromRfc2822(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromRfc2822(value) {
+  return new Date(value);
 }
 
 /**
@@ -34,10 +33,9 @@ function parseDataFromRfc2822(/* value */) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return new Date(value);
 }
-
 
 /**
  * Returns true if specified date is leap year and false otherwise
@@ -53,10 +51,11 @@ function parseDataFromIso8601(/* value */) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const x = new Date(date).getFullYear();
+  const result = new Date(x, 2, 0);
+  return result.getDate() === 29;
 }
-
 
 /**
  * Returns the string represention of the timespan between two dates.
@@ -73,10 +72,24 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  const firstDate = new Date(startDate);
+  const secondDate = new Date(endDate);
+  let ms = `${secondDate - firstDate} `;
+  if (ms.length < 3) {
+    ms = `${ms}00`;
+  }
+  const h = (secondDate - firstDate) / 3600 / 1000;
+  let m = (secondDate - firstDate - h * 3600 * 1000) / 60 / 1000;
+  if (m < 10) {
+    m = `0${m}`;
+  }
+  let s = (secondDate - firstDate - h * 3600 * 1000 - m * 60 * 1000) / 1000;
+  if (s < 10) {
+    s = `0${s}`;
+  }
+  return `0${h}:${m}:${s}.${ms.slice(ms.length - 4)}`;
 }
-
 
 /**
  * Returns the angle (in radians) between the hands of an analog clock
@@ -95,7 +108,6 @@ function timeSpanToString(/* startDate, endDate */) {
 function angleBetweenClockHands(/* date */) {
   throw new Error('Not implemented');
 }
-
 
 module.exports = {
   parseDataFromRfc2822,
