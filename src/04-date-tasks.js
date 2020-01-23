@@ -75,20 +75,23 @@ function isLeapYear(date) {
 function timeSpanToString(startDate, endDate) {
   const firstDate = new Date(startDate);
   const secondDate = new Date(endDate);
-  let ms = `${secondDate - firstDate} `;
-  if (ms.length < 3) {
-    ms = `${ms}00`;
+  const date = secondDate - firstDate;
+  let ms = date;
+  if (date % 1000 === 0) {
+    ms = '000';
+  } else {
+    ms = date % 1000;
   }
-  const h = (secondDate - firstDate) / 3600 / 1000;
-  let m = (secondDate - firstDate - h * 3600 * 1000) / 60 / 1000;
+  const h = Math.floor((date) / 3600 / 1000);
+  let m = Math.floor((date - h * 3600 * 1000) / 60 / 1000);
   if (m < 10) {
     m = `0${m}`;
   }
-  let s = (secondDate - firstDate - h * 3600 * 1000 - m * 60 * 1000) / 1000;
+  let s = Math.floor((date - h * 3600 * 1000 - m * 60 * 1000) / 1000);
   if (s < 10) {
     s = `0${s}`;
   }
-  return `0${h}:${m}:${s}.${ms.slice(ms.length - 4)}`;
+  return `0${h}:${m}:${s}.${ms}`;
 }
 
 /**
@@ -105,8 +108,14 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const time = new Date(date);
+  let H = time.getUTCHours();
+  if (H >= 12) { H -= 12; }
+  const M = time.getMinutes();
+  let deg = 0.5 * (60 * H - 11 * M);
+  if (deg > 180) { deg = 360 - deg; }
+  return Math.abs(deg * (Math.PI / 180));
 }
 
 module.exports = {

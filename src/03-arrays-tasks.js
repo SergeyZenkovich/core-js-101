@@ -658,8 +658,10 @@ function group(array, keySelector, valueSelector) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], x=>x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  const mappedArr = arr.map(childrenSelector);
+  const result = mappedArr.flat();
+  return result;
 }
 
 /**
@@ -674,8 +676,12 @@ function selectMany(/* arr, childrenSelector */) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+function getElementByIndexes(arr, indexes) {
+  const result = indexes.reduce((accum, current) => {
+    const x = [...accum];
+    return x[current];
+  }, arr);
+  return result;
 }
 
 /**
@@ -696,8 +702,17 @@ function getElementByIndexes(/* arr, indexes */) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  const even = arr.length % 2 === 0;
+  if (even) {
+    const firstHalf = arr.filter((elem, index) => index < arr.length / 2);
+    const secondHalf = arr.filter((elem, index) => index >= arr.length / 2);
+    return [...secondHalf, ...firstHalf];
+  }
+  const firstHalf = arr.filter((elem, index) => index < arr.length / 2 - 1);
+  const middleElem = arr[Math.floor(arr.length / 2)];
+  const secondHalf = arr.filter((elem, index) => index > arr.length / 2);
+  return [...secondHalf, middleElem, ...firstHalf];
 }
 
 module.exports = {
